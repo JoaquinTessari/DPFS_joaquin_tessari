@@ -20,7 +20,7 @@ El sitio está pensado principalmente para:
 
 ## 👤 Sobre mí
 
-Soy [Tu Nombre], desarrollador Full Stack en formación con pasión por la tecnología y el diseño. Este proyecto representa una oportunidad para aplicar mis conocimientos en Node.js y React, desarrollando una plataforma sólida, funcional y centrada en el usuario.
+Soy Joaquin Tessari, desarrollador Full Stack en formación con pasión por la tecnología y el diseño. Este proyecto representa una oportunidad para aplicar mis conocimientos en Node.js y React, desarrollando una plataforma sólida, funcional y centrada en el usuario.
 
 ---
 
