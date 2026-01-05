@@ -11,6 +11,7 @@ Gamers
 Técnicos en computación
 Usuarios que quieren armar o actualizar su equipo
 Emprendedores y empresas que buscan soluciones tecnológicas para su actividad diaria
+
 👤 Sobre mí
 Soy Joaquin Tessari, desarrollador Full Stack en formación con pasión por la tecnología y el diseño. Este proyecto representa una oportunidad para aplicar mis conocimientos en Node.js y React, desarrollando una plataforma sólida, funcional y centrada en el usuario.
 
