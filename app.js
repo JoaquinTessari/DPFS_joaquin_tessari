@@ -3,18 +3,10 @@ const path = require('path');
 const app = express();
 const session = require('express-session');
 const methodOverride = require('method-override');
-const multer = require('multer');
+const fs = require('fs');
 
-// Configurar multer para subida de imágenes
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, 'public/images'));
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-const upload = multer({ storage });
+// Rutas
+const productsRouter = require('./src/routes/products');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
@@ -29,18 +21,18 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Datos de prueba (Mock)
-const products = [
-    { id: 1, name: 'Notebook Gamer X500', price: 850000, image: '/images/notebook.jpg', description: 'Potente notebook para gaming.', category: 'computacion' },
-    { id: 2, name: 'Auriculares BT', price: 45000, image: '/images/headphones.jpg', description: 'Auriculares inalámbricos de alta calidad.', category: 'audio' },
-    { id: 3, name: 'Monitor 24" IPS', price: 210000, image: '/images/monitor.jpg', description: 'Monitor Full HD con panel IPS.', category: 'computacion' },
-    { id: 4, name: 'Teclado Mecánico', price: 65000, image: '/images/keyboard.jpg', description: 'Teclado mecánico retroiluminado.', category: 'gaming' },
-    { id: 5, name: 'Mouse Gamer RGB', price: 25000, image: '/images/mouse.jpg', description: 'Mouse con sensor óptico.', category: 'ofertas' }
-];
+// Helpers to read JSON data
+const getUsers = () => {
+    try {
+        return JSON.parse(fs.readFileSync(path.join(__dirname, 'data/users.json'), 'utf-8'));
+    } catch (e) { return []; }
+};
 
-const users = [
-    { id: 1, email: 'admin@admin.com', password: 'admin', role: 'admin' }
-];
+const getProducts = () => {
+    try {
+        return JSON.parse(fs.readFileSync(path.join(__dirname, 'data/products.json'), 'utf-8'));
+    } catch (e) { return []; }
+};
 
 // Middlewares Globales
 app.use((req, res, next) => {
@@ -56,16 +48,10 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware de Autenticación
-const isAdmin = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'admin') {
-        return next();
-    }
-    res.redirect('/users/login');
-};
-
 // Rutas Principales
 app.get('/', (req, res) => {
+    // Show last 4 products or just all products as "featured"
+    const products = getProducts();
     res.render('index', { products, isHome: true });
 });
 
@@ -80,6 +66,7 @@ app.get('/users/login', (req, res) => {
 
 app.post('/users/login', (req, res) => {
     const { email, password } = req.body;
+    const users = getUsers();
     const user = users.find(u => u.email === email && u.password === password);
     if (user) {
         req.session.user = user;
@@ -100,73 +87,7 @@ app.get('/users/profile', (req, res) => {
 });
 
 // Rutas de Productos
-app.get('/products', (req, res) => {
-    res.render('index', { products, isHome: false });
-});
-
-app.get('/products/category/:category', (req, res) => {
-    const category = req.params.category;
-    const filteredProducts = products.filter(p => p.category === category);
-    res.render('index', { products: filteredProducts, isHome: false });
-});
-
-app.get('/products/create', isAdmin, (req, res) => {
-    res.render('products/create');
-});
-
-app.post('/products', isAdmin, upload.single('image'), (req, res) => {
-    const newProduct = {
-        id: products.length + 1,
-        name: req.body.name,
-        price: parseFloat(req.body.price),
-        description: req.body.description,
-        category: req.body.category,
-        image: req.file ? `/images/${req.file.filename}` : '/images/default.jpg'
-    };
-    products.push(newProduct);
-    res.redirect('/products');
-});
-
-app.get('/products/:id', (req, res) => {
-    const product = products.find(p => p.id == req.params.id);
-    if (!product) return res.send('Producto no encontrado');
-    res.render('products/detail', { product });
-});
-
-app.get('/products/:id/edit', isAdmin, (req, res) => {
-    const product = products.find(p => p.id == req.params.id);
-    if (!product) return res.send('Producto no encontrado');
-    res.render('products/edit', { product });
-});
-
-app.put('/products/:id', isAdmin, upload.single('image'), (req, res) => {
-    const index = products.findIndex(p => p.id == req.params.id);
-    if (index !== -1) {
-        products[index] = {
-            ...products[index],
-            name: req.body.name,
-            price: parseFloat(req.body.price),
-            description: req.body.description,
-            category: req.body.category,
-            image: req.file ? `/images/${req.file.filename}` : products[index].image
-        };
-        res.redirect(`/products/${req.params.id}`);
-    } else {
-        res.send('Producto no encontrado');
-    }
-});
-
-app.delete('/products/:id', isAdmin, (req, res) => {
-    const productId = req.params.id;
-    const index = products.findIndex(p => p.id == productId);
-
-    if (index !== -1) {
-        products.splice(index, 1);
-        res.redirect('/products');
-    } else {
-        res.status(404).send('Producto no encontrado');
-    }
-});
+app.use('/products', productsRouter);
 
 // Rutas del Carrito
 app.get('/cart', (req, res) => {
@@ -177,6 +98,7 @@ app.get('/cart', (req, res) => {
 
 app.post('/cart/add/:id', (req, res) => {
     const productId = req.params.id;
+    const products = getProducts();
     const product = products.find(p => p.id == productId);
 
     if (product) {
@@ -213,3 +135,4 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+

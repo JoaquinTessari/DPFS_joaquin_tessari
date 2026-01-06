@@ -1,0 +1,92 @@
+[
+    {
+        "id": 1,
+        "firstName": "Juan",
+        "lastName": "Pérez",
+        "email": "juan.perez@example.com",
+        "password": "hashed_password_123",
+        "category": "admin",
+        "image": "juan-perez.jpg"
+    },
+    {
+        "id": 2,
+        "firstName": "María",
+        "lastName": "Gómez",
+        "email": "maria.gomez@example.com",
+        "password": "hashed_password_456",
+        "category": "customer",
+        "image": "maria-gomez.jpg"
+    },
+    {
+        "id": 3,
+        "firstName": "Carlos",
+        "lastName": "Rodríguez",
+        "email": "carlos.rodriguez@example.com",
+        "password": "hashed_password_789",
+        "category": "customer",
+        "image": "carlos-rodriguez.jpg"
+    },
+    {
+        "id": 4,
+        "firstName": "Ana",
+        "lastName": "Fernández",
+        "email": "ana.fernandez@example.com",
+        "password": "hashed_password_abc",
+        "category": "customer",
+        "image": "ana-fernandez.jpg"
+    },
+    {
+        "id": 5,
+        "firstName": "Luis",
+        "lastName": "Martínez",
+        "email": "luis.martinez@example.com",
+        "password": "hashed_password_def",
+        "category": "admin",
+        "image": "luis-martinez.jpg"
+    },
+    {
+        "id": 6,
+        "firstName": "Sofía",
+        "lastName": "López",
+        "email": "sofia.lopez@example.com",
+        "password": "hashed_password_ghi",
+        "category": "customer",
+        "image": "sofia-lopez.jpg"
+    },
+    {
+        "id": 7,
+        "firstName": "Miguel",
+        "lastName": "Sánchez",
+        "email": "miguel.sanchez@example.com",
+        "password": "hashed_password_jkl",
+        "category": "customer",
+        "image": "miguel-sanchez.jpg"
+    },
+    {
+        "id": 8,
+        "firstName": "Laura",
+        "lastName": "Díaz",
+        "email": "laura.diaz@example.com",
+        "password": "hashed_password_mno",
+        "category": "customer",
+        "image": "laura-diaz.jpg"
+    },
+    {
+        "id": 9,
+        "firstName": "David",
+        "lastName": "Torres",
+        "email": "david.torres@example.com",
+        "password": "hashed_password_pqr",
+        "category": "customer",
+        "image": "david-torres.jpg"
+    },
+    {
+        "id": 10,
+        "firstName": "Elena",
+        "lastName": "Ruiz",
+        "email": "elena.ruiz@example.com",
+        "password": "hashed_password_stu",
+        "category": "admin",
+        "image": "elena-ruiz.jpg"
+    }
+]

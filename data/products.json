@@ -1,0 +1,180 @@
+[
+  {
+    "id": 2,
+    "name": "Apple MacBook Air M1",
+    "description": "La notebook más delgada y ligera de Apple viene con los superpoderes del chip M1. Termina todos tus proyectos mucho más rápido con el CPU de 8 núcleos.",
+    "image": "macbook-air.jpg",
+    "category": "Computación",
+    "colors": [
+      "Gris Espacial",
+      "Plata",
+      "Oro"
+    ],
+    "price": 249999
+  },
+  {
+    "id": 3,
+    "name": "Samsung Galaxy S23 Ultra",
+    "description": "El Galaxy S23 Ultra viene con una cámara de 200MP, el chip más rápido en un Galaxy y una pantalla inmersiva de 6.8 pulgadas.",
+    "image": "s23-ultra.jpg",
+    "category": "Celulares",
+    "colors": [
+      "Negro",
+      "Verde",
+      "Crema"
+    ],
+    "price": 299999
+  },
+  {
+    "id": 4,
+    "name": "Auriculares Sony WH-1000XM5",
+    "description": "Nuestra tecnología de Noise Cancelling líder del sector alcanza nuevas cotas con los auriculares WH-1000XM5. Descubre cómo combinamos nuestro mejor procesador de Noise Cancelling con micrófonos de alto rendimiento.",
+    "image": "sony-headphones.jpg",
+    "category": "Audio",
+    "colors": [
+      "Negro",
+      "Plata"
+    ],
+    "price": 89999
+  },
+  {
+    "id": 5,
+    "name": "Monitor LG UltraGear 27\"",
+    "description": "Monitor Gaming con pantalla IPS, 144Hz y 1ms de respuesta. Compatible con NVIDIA G-Sync para una experiencia de juego fluida.",
+    "image": "monitor-lg.jpg",
+    "category": "Gaming",
+    "colors": [
+      "Negro"
+    ],
+    "price": 110000
+  },
+  {
+    "id": 6,
+    "name": "Teclado Mecánico Keychron K2",
+    "description": "Teclado mecánico inalámbrico con switches Gateron Blue. Diseño compacto del 75% con retroiluminación RGB.",
+    "image": "keychron-k2.jpg",
+    "category": "Periféricos",
+    "colors": [
+      "Gris"
+    ],
+    "price": 45000
+  },
+  {
+    "id": 7,
+    "name": "Mouse Logitech MX Master 3S",
+    "description": "Un ícono remasterizado. Siente cada momento de tu flujo de trabajo con aún más precisión, tacto y rendimiento, gracias a los clicks silenciosos y el seguimiento de 8.000 DPI sobre cristal.",
+    "image": "mx-master-3s.jpg",
+    "category": "Periféricos",
+    "colors": [
+      "Grafito",
+      "Gris Pálido"
+    ],
+    "price": 38000
+  },
+  {
+    "id": 8,
+    "name": "Nintendo Switch OLED",
+    "description": "Disfruta de colores intensos y un alto contraste en una pantalla de 7 pulgadas. Juega en modo TV, semiportátil o portátil.",
+    "image": "switch-oled.jpg",
+    "category": "Gaming",
+    "colors": [
+      "Blanco",
+      "Neón"
+    ],
+    "price": 105000
+  },
+  {
+    "id": 9,
+    "name": "iPad Air 5ta Gen",
+    "description": "Con la potencia del chip M1 de Apple. Cámara ultra gran angular de 12 MP con Encuadre Centrado. Pantalla Liquid Retina de 10.9 pulgadas.",
+    "image": "ipad-air.jpg",
+    "category": "Computación",
+    "colors": [
+      "Azul",
+      "Rosa",
+      "Púrpura",
+      "Gris Espacial"
+    ],
+    "price": 180000
+  },
+  {
+    "id": 10,
+    "name": "Smart TV Samsung 55\" 4K",
+    "description": "Colores cristalinos y vivos. Procesador Crystal 4K que garantiza que obtengas una resolución de hasta 4K para tu contenido favorito.",
+    "image": "samsung-tv.jpg",
+    "category": "TV",
+    "colors": [
+      "Negro"
+    ],
+    "price": 135000
+  },
+  {
+    "id": 11,
+    "name": "JBL Flip 6",
+    "description": "El ritmo no para con el sistema de altavoces de 2 vías del JBL Flip 6, diseñado para ofrecer un sonido nítido y potente.",
+    "image": "jbl-flip6.jpg",
+    "category": "Audio",
+    "colors": [
+      "Rojo",
+      "Azul",
+      "Negro",
+      "Camuflaje"
+    ],
+    "price": 32000
+  },
+  {
+    "id": 12,
+    "name": "Cámara Canon EOS R50",
+    "description": "Cámara mirrorless ligera y compacta, ideal para creadores de contenido. Video 4K 30p y fotos de 24.2 MP.",
+    "image": "canon-r50.jpg",
+    "category": "Fotografía",
+    "colors": [
+      "Negro",
+      "Blanco"
+    ],
+    "price": 350000
+  },
+  {
+    "id": 13,
+    "name": "Xbox Series X",
+    "description": "La Xbox más rápida y potente de la historia. Juega a miles de títulos de cuatro generaciones de consolas.",
+    "image": "xbox-series-x.jpg",
+    "category": "Gaming",
+    "colors": [
+      "Negro"
+    ],
+    "price": 155000
+  },
+  {
+    "id": 14,
+    "name": "Silla Gamer Corsair T3 Rush",
+    "description": "Inspirada en el automovilismo de alto rendimiento. Tapicería de tela suave transpirable, almohada cervical acolchada y soporte lumbar de espuma viscoelástica.",
+    "image": "corsair-chair.jpg",
+    "category": "Muebles",
+    "colors": [
+      "Gris/Blanco",
+      "Gris/Carbón"
+    ],
+    "price": 95000
+  },
+  {
+    "id": 15,
+    "name": "Drone DJI Mini 3",
+    "description": "Vuela más tiempo y captura más con una duración de batería mejorada. Video 4K HDR y fotos de 48 MP.",
+    "image": "dji-mini-3.jpg",
+    "category": "Fotografía",
+    "colors": [
+      "Gris"
+    ],
+    "price": 210000
+  },
+  {
+    "id": 16,
+    "name": "Test Product",
+    "price": 123,
+    "description": "Test Description",
+    "category": "computacion",
+    "colors": [],
+    "image": "/images/default.jpg"
+  }
+]
