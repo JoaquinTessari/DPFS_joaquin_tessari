@@ -49,14 +49,18 @@
                 </form>
                 <a href="/cart"><button class="cart">VER CARRITO</button></a>
                 <br><br>
-                <a href="/products/<%= product.id %>/edit">EDITAR PRODUCTO (Admin)</a>
-                <% if (user && user.role==='admin' ) { %>
-                    <form action="/products/<%= product.id %>?_method=DELETE" method="POST" style="margin-top: 10px;">
-                        <button type="submit"
-                            style="background: none; border: none; color: #ef4444; cursor: pointer; text-decoration: underline; padding: 0;">ELIMINAR
-                            PRODUCTO (Admin)</button>
-                    </form>
+                <% if (typeof user !=='undefined' && user && user.category==='admin' ) { %>
+                    <br><br>
+                    <a href="/products/<%= product.id %>/edit">EDITAR PRODUCTO (Admin)</a>
                     <% } %>
+                        <% if (typeof user !=='undefined' && user && user.category==='admin' ) { %>
+                            <form action="/products/<%= product.id %>?_method=DELETE" method="POST"
+                                style="margin-top: 10px;">
+                                <button type="submit"
+                                    style="background: none; border: none; color: #ef4444; cursor: pointer; text-decoration: underline; padding: 0;">ELIMINAR
+                                    PRODUCTO (Admin)</button>
+                            </form>
+                            <% } %>
             </div>
 
         </section>

@@ -1,12 +1,8 @@
-const isAdmin = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'admin') {
-        return next();
+const authMiddleware = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/users/login');
     }
-    // Check if user JSON data has a category field instead of role, based on users.json
-    if (req.session.user && req.session.user.category === 'admin') {
-        return next();
-    }
-    res.redirect('/users/login');
+    next();
 };
 
-module.exports = isAdmin;
+module.exports = authMiddleware;

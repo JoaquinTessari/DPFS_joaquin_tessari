@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/JoaquinTessari/DPFS_joaquin_tessari#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
     "express-session": "^1.18.2",

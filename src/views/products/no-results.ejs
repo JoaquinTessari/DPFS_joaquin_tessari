@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+
+    <%- include('../partials/header') %>
+
+        <section class="section">
+            <div
+                style="text-align: center; padding: 4rem 2rem; background: #fff; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 3rem;">
+                <i class="fas fa-search" style="font-size: 4rem; color: var(--border); margin-bottom: 1.5rem;"></i>
+                <h2 style="border: none; margin-bottom: 1rem;">Tu búsqueda no arrojó resultados</h2>
+                <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                    No encontramos coincidencias para "<%= query %>". <br>
+                        Intentá con otras palabras clave o revisá la ortografía.
+                </p>
+                <a href="/" class="btn buy"
+                    style="display: inline-block; width: auto; padding: 12px 30px; margin-top: 2rem;">Volver al
+                    inicio</a>
+            </div>
+
+            <h3>Te mostramos algunas opciones que podrían gustarte</h3>
+            <br>
+            <div class="products">
+                <% recommendations.forEach(product=> { %>
+                    <div class="product">
+                        <a href="/products/<%= product.id %>">
+                            <img src="<%= product.image %>" alt="<%= product.name %>">
+                            <h4>
+                                <%= product.name %>
+                            </h4>
+                        </a>
+                        <p class="price">$<%= product.price %>
+                        </p>
+                    </div>
+                    <% }) %>
+            </div>
+        </section>
+
+        <%- include('../partials/footer') %>
+
+</body>
+
+</html>

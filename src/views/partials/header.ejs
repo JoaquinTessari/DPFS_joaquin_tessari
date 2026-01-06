@@ -3,32 +3,59 @@
         <a href="/" class="logo">
             <img src="/images/logo.png" alt="TESSARI TECH">
         </a>
-        <div class="search custom-search">
-            <input type="text" placeholder="Buscar productos...">
+        <form action="/products/search" method="GET" class="search custom-search">
+            <input type="text" name="q" placeholder="Buscar productos...">
             <i class="fas fa-search search-icon"></i>
-        </div>
+        </form>
         <div class="icons">
             <% if (user) { %>
-                <span class="user-email">Hola, <%= user.email %></span>
-                <% if (user.role==='admin' ) { %>
-                    <a href="/products/create" class="admin-link"><i class="fas fa-plus-circle"></i> Crear</a>
+                <div class="user-menu-container">
+                    <div class="user-profile" id="userMenuBtn">
+                        <img src="<%= user.image && user.image.startsWith('/') ? user.image : '/images/users/' + (user.image || 'default-user.jpg') %>"
+                            alt="Perfil" class="user-avatar" onerror="this.src='/images/users/default-user.jpg'">
+                        <span class="user-name">
+                            <%= user.firstName || user.email %>
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-menu" id="userDropdown">
+                        <div class="dropdown-header">
+                            <span class="dropdown-email">
+                                <%= user.email %>
+                            </span>
+                        </div>
+                        <ul>
+                            <% if (user.category==='admin' ) { %>
+                                <li>
+                                    <a href="/products/create"><i class="fas fa-plus-circle"></i> Administrar
+                                        Productos</a>
+                                </li>
+                                <% } %>
+                                    <li>
+                                        <a href="/users/profile"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="/users/logout" class="logout"><i class="fas fa-sign-out-alt"></i>
+                                            Cerrar Sesión</a>
+                                    </li>
+                        </ul>
+                    </div>
+                </div>
+                <% } else { %>
+                    <a href="/users/login" class="login-btn"><i class="fas fa-user"></i> Ingresá</a>
                     <% } %>
-                        <a href="/users/logout"><i class="fas fa-sign-out-alt"></i> Salir</a>
-                        <% } else { %>
-                            <a href="/users/login"><i class="fas fa-user"></i> Ingresá</a>
-                            <% } %>
-                                <a href="/cart" style="position: relative; display: flex; align-items: center;">
-                                    <img src="/images/carrito-de-compras.png" alt="Carrito"
-                                        style="width: 30px; height: 30px;">
-                                    <% if (locals.totalQuantity> 0) { %>
-                                        <span class="cart-badge">
-                                            <%= totalQuantity %>
-                                        </span>
-                                        <% } %>
-                                </a>
-                                <button class="menu-toggle" id="menuToggle">
-                                    <i class="fas fa-bars"></i>
-                                </button>
+                        <a href="/cart" style="position: relative; display: flex; align-items: center;">
+                            <img src="/images/carrito-de-compras.png" alt="Carrito" style="width: 30px; height: 30px;">
+                            <% if (locals.totalQuantity> 0) { %>
+                                <span class="cart-badge">
+                                    <%= totalQuantity %>
+                                </span>
+                                <% } %>
+                        </a>
+                        <button class="menu-toggle" id="menuToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
         </div>
     </div>
 
@@ -46,15 +73,35 @@
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
 
-    menuToggle.addEventListener('click', () => {
-        mainNav.classList.toggle('active');
-        const icon = menuToggle.querySelector('i');
-        if (mainNav.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
-        } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-        }
-    });
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    }
+
+    // User Dropdown Logic
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+    }
 </script>

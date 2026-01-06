@@ -17,13 +17,13 @@ const saveProducts = (products) => {
 };
 
 const controller = {
-    // Root - Show all products
+    // Raíz - Mostrar todos los productos
     index: (req, res) => {
         const products = getProducts();
         res.render('index', { products, isHome: false });
     },
 
-    // By Category
+    // Por Categoría
     listByCategory: (req, res) => {
         const products = getProducts();
         const category = req.params.category;
@@ -31,7 +31,27 @@ const controller = {
         res.render('index', { products: filteredProducts, isHome: false });
     },
 
-    // Detail - Detail from one product
+    // Buscar
+    search: (req, res) => {
+        const query = req.query.q || '';
+        const products = getProducts();
+        const results = products.filter(p =>
+            p.name.toLowerCase().includes(query.toLowerCase()) ||
+            (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
+        );
+
+        if (results.length > 0) {
+            res.render('index', { products: results, isHome: false, query });
+        } else {
+            // Obtener 4 productos aleatorios como recomendaciones
+            const recommendations = [...products]
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 4);
+            res.render('products/no-results', { query, recommendations });
+        }
+    },
+
+    // Detalle - Detalle de un producto
     detail: (req, res) => {
         const products = getProducts();
         const product = products.find(p => p.id == req.params.id);
@@ -39,12 +59,12 @@ const controller = {
         res.render('products/detail', { product });
     },
 
-    // Create - Form to create
+    // Crear - Formulario para crear
     create: (req, res) => {
         res.render('products/create');
     },
 
-    // Create -  Method to store
+    // Crear - Método para guardar
     store: (req, res) => {
         const products = getProducts();
         const newProduct = {
@@ -61,7 +81,7 @@ const controller = {
         res.redirect('/products');
     },
 
-    // Edit - Form to edit
+    // Editar - Formulario para editar
     edit: (req, res) => {
         const products = getProducts();
         const product = products.find(p => p.id == req.params.id);
@@ -69,7 +89,7 @@ const controller = {
         res.render('products/edit', { product });
     },
 
-    // Update - Method to update
+    // Actualizar - Método para actualizar
     update: (req, res) => {
         const products = getProducts();
         const index = products.findIndex(p => p.id == req.params.id);
@@ -80,9 +100,9 @@ const controller = {
                 price: parseFloat(req.body.price),
                 description: req.body.description,
                 category: req.body.category,
-                // Only update image if a new one is uploaded
+                // Solo actualizar la imagen si se sube una nueva
                 image: req.file ? `/images/${req.file.filename}` : products[index].image,
-                // Assuming colors are also editable but the form might need adjustment or we just process text again
+                // Asumiendo que los colores también son editables pero el formulario podría necesitar ajustes o simplemente procesamos el texto de nuevo
                 colors: req.body.colors ? req.body.colors.split(',').map(c => c.trim()) : products[index].colors
             };
             saveProducts(products);
@@ -92,7 +112,7 @@ const controller = {
         }
     },
 
-    // Delete - Delete one product from DB
+    // Borrar - Borrar un producto de la BD
     destroy: (req, res) => {
         let products = getProducts();
         const productId = req.params.id;

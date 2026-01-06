@@ -12,12 +12,16 @@
         <div class="form-container">
             <h2>Crear Cuenta</h2>
 
-            <form action="/users/register" method="POST">
+            <form action="/users/register" method="POST" enctype="multipart/form-data">
                 <input type="text" name="firstName" placeholder="Nombre" required>
                 <input type="text" name="lastName" placeholder="Apellido" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Contraseña" required>
                 <input type="password" name="confirmPassword" placeholder="Repetir Contraseña" required>
+
+                <label for="image" style="display: block; margin-top: 10px; margin-bottom: 5px;">Imagen de
+                    perfil:</label>
+                <input type="file" name="image" id="image" accept="image/*" style="margin-bottom: 15px;">
 
                 <label>
                     <input type="checkbox" required> Acepto los Términos y Condiciones

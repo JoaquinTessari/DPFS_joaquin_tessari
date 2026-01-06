@@ -4,9 +4,14 @@ const app = express();
 const session = require('express-session');
 const methodOverride = require('method-override');
 const fs = require('fs');
+const cookieParser = require('cookie-parser');
 
 // Rutas
 const productsRouter = require('./src/routes/products');
+const usersRouter = require('./src/routes/users');
+
+// Middlewares personalizados
+const userLoggedMiddleware = require('./src/middlewares/userLoggedMiddleware');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
@@ -17,17 +22,13 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+app.use(cookieParser());
+app.use(userLoggedMiddleware);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Helpers to read JSON data
-const getUsers = () => {
-    try {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, 'data/users.json'), 'utf-8'));
-    } catch (e) { return []; }
-};
-
+// Ayudantes para leer datos JSON
 const getProducts = () => {
     try {
         return JSON.parse(fs.readFileSync(path.join(__dirname, 'data/products.json'), 'utf-8'));
@@ -42,49 +43,17 @@ app.use((req, res, next) => {
         totalQuantity = req.session.cart.reduce((acc, item) => acc + item.quantity, 0);
     }
     res.locals.totalQuantity = totalQuantity;
-
-    // Sesión de usuario
-    res.locals.user = req.session.user || null;
     next();
 });
 
 // Rutas Principales
 app.get('/', (req, res) => {
-    // Show last 4 products or just all products as "featured"
     const products = getProducts();
     res.render('index', { products, isHome: true });
 });
 
 // Rutas de Usuario
-app.get('/users/register', (req, res) => {
-    res.render('users/register');
-});
-
-app.get('/users/login', (req, res) => {
-    res.render('users/login');
-});
-
-app.post('/users/login', (req, res) => {
-    const { email, password } = req.body;
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-        req.session.user = user;
-        res.redirect('/');
-    } else {
-        res.send('Credenciales inválidas');
-    }
-});
-
-app.get('/users/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
-
-app.get('/users/profile', (req, res) => {
-    if (!req.session.user) return res.redirect('/users/login');
-    res.render('users/profile');
-});
+app.use('/users', usersRouter);
 
 // Rutas de Productos
 app.use('/products', productsRouter);
@@ -135,4 +104,5 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
 

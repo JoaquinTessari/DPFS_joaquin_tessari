@@ -167,14 +167,5 @@
       "Gris"
     ],
     "price": 210000
-  },
-  {
-    "id": 16,
-    "name": "Test Product",
-    "price": 123,
-    "description": "Test Description",
-    "category": "computacion",
-    "colors": [],
-    "image": "/images/default.jpg"
   }
 ]

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const productsController = require('../controllers/productsController');
-const isAdmin = require('../middlewares/authMiddleware');
+const adminMiddleware = require('../middlewares/adminMiddleware');
 const multer = require('multer');
 const path = require('path');
 
-// Multer config (same as in app.js, maybe should be extracted too but for now I'll duplicate or import if possible. Duplicating is safer for now to avoid context issues)
+// Configuración de Multer (igual que en app.js, tal vez debería extraerse también pero por ahora lo duplicaré o importaré si es posible. Duplicar es más seguro por ahora para evitar problemas de contexto)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '../../public/images'));
@@ -18,27 +18,30 @@ const upload = multer({ storage });
 
 // /products
 
-/*** GET ALL PRODUCTS ***/
+/*** OBTENER TODOS LOS PRODUCTOS ***/
 router.get('/', productsController.index);
 
-/*** GET PRODUCTS BY CATEGORY ***/
+/*** OBTENER PRODUCTOS POR CATEGORÍA ***/
 router.get('/category/:category', productsController.listByCategory);
 
-/*** CREATE ONE PRODUCT ***/
-router.get('/create', isAdmin, productsController.create);
-router.post('/', isAdmin, upload.single('image'), productsController.store);
+/*** BUSCAR PRODUCTOS ***/
+router.get('/search', productsController.search);
+
+/*** CREAR UN PRODUCTO ***/
+router.get('/create', adminMiddleware, productsController.create);
+router.post('/', adminMiddleware, upload.single('image'), productsController.store);
 
 
-/*** GET ONE PRODUCT ***/
+/*** OBTENER UN PRODUCTO ***/
 router.get('/:id', productsController.detail);
 
-/*** EDIT ONE PRODUCT ***/
-router.get('/:id/edit', isAdmin, productsController.edit);
-router.put('/:id', isAdmin, upload.single('image'), productsController.update);
+/*** EDITAR UN PRODUCTO ***/
+router.get('/:id/edit', adminMiddleware, productsController.edit);
+router.put('/:id', adminMiddleware, upload.single('image'), productsController.update);
 
 
-/*** DELETE ONE PRODUCT***/
-router.delete('/:id', isAdmin, productsController.destroy);
+/*** ELIMINAR UN PRODUCTO ***/
+router.delete('/:id', adminMiddleware, productsController.destroy);
 
 
 module.exports = router;

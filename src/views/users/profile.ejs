@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+
+    <%- include('../partials/header') %>
+
+        <div class="container" style="padding: 40px; text-align: center;">
+            <div class="profile-card"
+                style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                <h2>Mi Perfil</h2>
+                <img src="<%= user.image %>" alt="Perfil"
+                    style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 20px;">
+                <h3>
+                    <%= user.firstName %>
+                        <%= user.lastName %>
+                </h3>
+                <p><strong>Email:</strong>
+                    <%= user.email %>
+                </p>
+                <p><strong>Categoría:</strong>
+                    <%= user.category %>
+                </p>
+
+                <div style="margin-top: 20px;">
+                    <% if (user.category==='admin' ) { %>
+                        <a href="/products/create" class="button"
+                            style="background-color: var(--primary); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin-bottom: 15px; display: inline-block;">CARGAR
+                            PRODUCTO (Admin)</a>
+                        <br>
+                        <% } %>
+                            <a href="/products" class="button">Ver Productos</a>
+                            <a href="/users/logout" class="button delete">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+
+</body>
+
+</html>

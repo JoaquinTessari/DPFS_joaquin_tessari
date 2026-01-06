@@ -58,3 +58,14 @@ Para el diseño y la funcionalidad, se analizaron los líderes del mercado local
 Soy un apasionado por la tecnología y el diseño. **Tessari Tech** representa una oportunidad para aplicar mis conocimientos en **Node.js** y **React**, desarrollando una plataforma funcional y centrada en el usuario.
 
 ---
+
+
+<div align="center">
+
+credenciales de admin:
+
+email: superadmin@admin.com
+password: admin123    
+
+
+</div>
