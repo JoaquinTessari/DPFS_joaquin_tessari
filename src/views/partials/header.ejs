@@ -1,0 +1,60 @@
+<header>
+    <div class="top-header">
+        <a href="/" class="logo">
+            <img src="/images/logo.png" alt="TESSARI TECH">
+        </a>
+        <div class="search custom-search">
+            <input type="text" placeholder="Buscar productos...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="icons">
+            <% if (user) { %>
+                <span class="user-email">Hola, <%= user.email %></span>
+                <% if (user.role==='admin' ) { %>
+                    <a href="/products/create" class="admin-link"><i class="fas fa-plus-circle"></i> Crear</a>
+                    <% } %>
+                        <a href="/users/logout"><i class="fas fa-sign-out-alt"></i> Salir</a>
+                        <% } else { %>
+                            <a href="/users/login"><i class="fas fa-user"></i> Ingresá</a>
+                            <% } %>
+                                <a href="/cart" style="position: relative; display: flex; align-items: center;">
+                                    <img src="/images/carrito-de-compras.png" alt="Carrito"
+                                        style="width: 30px; height: 30px;">
+                                    <% if (locals.totalQuantity> 0) { %>
+                                        <span class="cart-badge">
+                                            <%= totalQuantity %>
+                                        </span>
+                                        <% } %>
+                                </a>
+                                <button class="menu-toggle" id="menuToggle">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+        </div>
+    </div>
+
+    <nav id="mainNav">
+        <ul>
+            <li><a href="/products/category/ofertas">OFERTAS</a></li>
+            <li><a href="/products/category/computacion">COMPUTACIÓN</a></li>
+            <li><a href="/products/category/audio">AUDIO</a></li>
+            <li><a href="/products/category/gaming">GAMING</a></li>
+        </ul>
+    </nav>
+</header>
+
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+
+    menuToggle.addEventListener('click', () => {
+        mainNav.classList.toggle('active');
+        const icon = menuToggle.querySelector('i');
+        if (mainNav.classList.contains('active')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
+</script>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+
+    <%- include('../partials/header') %>
+
+        <div class="form-container">
+            <h2>Crear Cuenta</h2>
+
+            <form action="/users/register" method="POST">
+                <input type="text" name="firstName" placeholder="Nombre" required>
+                <input type="text" name="lastName" placeholder="Apellido" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <input type="password" name="confirmPassword" placeholder="Repetir Contraseña" required>
+
+                <label>
+                    <input type="checkbox" required> Acepto los Términos y Condiciones
+                </label>
+
+                <button type="submit">REGISTRARME</button>
+            </form>
+
+            <p>¿Ya tenés cuenta? <a href="/users/login">Iniciar Sesión</a></p>
+        </div>
+
+        <%- include('../partials/footer') %>
+
+</body>
+
+</html>

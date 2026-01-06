@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+
+    <%- include('partials/header') %>
+
+        <div class="banner">BANNER PROMOCIONAL</div>
+
+        <div class="benefits">
+            <div class="benefit">
+                <i class="fas fa-credit-card" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
+                <br>Pagá con tarjeta
+            </div>
+            <div class="benefit">
+                <i class="fas fa-truck" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i>
+                <br>Envío gratis
+            </div>
+            <div class="benefit">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
+                <br>Seguridad
+            </div>
+        </div>
+
+        <section class="section">
+            <h2>Productos Destacados</h2>
+
+            <div class="products <%= (typeof isHome !== 'undefined' && isHome) ? 'featured-slider' : '' %>">
+                <% if (typeof products !='undefined' ) { %>
+                    <% products.forEach(product=> { %>
+                        <div class="product">
+                            <a href="/products/<%= product.id %>">
+                                <img src="<%= product.image %>" alt="<%= product.name %>">
+                                <h4>
+                                    <%= product.name %>
+                                </h4>
+                            </a>
+                            <p class="price">$<%= product.price %>
+                            </p>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p>No hay productos disponibles.</p>
+                                <% } %>
+            </div>
+        </section>
+
+        <%- include('partials/footer') %>
+
+</body>
+
+</html>

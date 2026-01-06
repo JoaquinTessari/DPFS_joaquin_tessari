@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+
+    <%- include('partials/header') %>
+
+        <section class="cart-page">
+
+            <div>
+                <h2>Carrito de Compras</h2>
+
+                <% if (cart.length===0) { %>
+                    <p>Tu carrito está vacío.</p>
+                    <% } else { %>
+                        <% cart.forEach(product=> { %>
+                            <div class="cart-item">
+                                <img src="<%= product.image %>" alt="<%= product.name %>">
+                                <div>
+                                    <h4>
+                                        <%= product.name %>
+                                    </h4>
+                                    <p>Precio: $<%= product.price %>
+                                    </p>
+                                    <p>Cantidad: <%= product.quantity %>
+                                    </p>
+                                    <form action="/cart/remove/<%= product.id %>" method="POST">
+                                        <input type="number" name="quantity" min="1" max="<%= product.quantity %>"
+                                            value="1" style="width:60px; margin-right:5px;" />
+                                        <button type="submit"
+                                            style="background:red; padding:5px; margin-top:5px;">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <% }) %>
+                                <% } %>
+            </div>
+
+            <div class="summary">
+                <h3>Resumen</h3>
+                <p>Productos: $<%= total %>
+                </p>
+                <p>Envío: Gratis</p>
+                <hr>
+                <h3>Total: $<%= total %>
+                </h3>
+                <a href="/"><button class="buy">CONTINUAR COMPRA</button></a>
+                <p>🔒 Pago seguro</p>
+            </div>
+
+        </section>
+
+        <%- include('partials/footer') %>
+
+</body>
+
+</html>

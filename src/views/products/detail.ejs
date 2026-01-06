@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+
+    <%- include('../partials/header') %>
+
+        <section class="product-page">
+
+            <div class="product-main">
+                <img src="<%= product.image %>" alt="<%= product.name %>">
+                <div class="thumbs">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+
+                <h3>Descripción del Producto</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+                <h3>Características Técnicas</h3>
+                <ul>
+                    <li>Procesador: Intel Core i7</li>
+                    <li>Memoria RAM: 16 GB DDR4</li>
+                    <li>Almacenamiento: 512 GB SSD NVMe</li>
+                    <li>Placa de Video: NVIDIA RTX 3050</li>
+                </ul>
+            </div>
+
+            <div class="buy-box">
+                <h2>
+                    <%= product.name %>
+                </h2>
+                <p>⭐⭐⭐⭐⭐ (12 opiniones)</p>
+                <h3>$ <%= product.price %>
+                </h3>
+                <p>6 cuotas sin interés</p>
+                <p>🚚 Llega gratis mañana</p>
+
+                <form action="/cart/add/<%= product.id %>" method="POST">
+                    <label>Cantidad</label>
+                    <input type="number" name="quantity" value="1" min="1" style="width: 60px; margin-right: 10px;">
+                    <button type="submit" class="buy">AGREGAR AL CARRITO</button>
+                </form>
+                <a href="/cart"><button class="cart">VER CARRITO</button></a>
+                <br><br>
+                <a href="/products/<%= product.id %>/edit">EDITAR PRODUCTO (Admin)</a>
+                <% if (user && user.role==='admin' ) { %>
+                    <form action="/products/<%= product.id %>?_method=DELETE" method="POST" style="margin-top: 10px;">
+                        <button type="submit"
+                            style="background: none; border: none; color: #ef4444; cursor: pointer; text-decoration: underline; padding: 0;">ELIMINAR
+                            PRODUCTO (Admin)</button>
+                    </form>
+                    <% } %>
+            </div>
+
+        </section>
+
+        <%- include('../partials/footer') %>
+
+</body>
+
+</html>
