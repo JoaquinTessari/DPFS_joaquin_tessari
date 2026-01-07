@@ -1,12 +1,23 @@
 const db = require('../database/models');
 const bcrypt = require('bcryptjs');
 
+const { validationResult } = require('express-validator');
+
 const controller = {
     register: (req, res) => {
         res.render('users/register');
     },
 
     processRegister: (req, res) => {
+        const resultValidation = validationResult(req);
+
+        if (resultValidation.errors.length > 0) {
+            return res.render('users/register', {
+                errors: resultValidation.mapped(),
+                oldData: req.body
+            });
+        }
+
         // Verificar si el email ya existe
         db.User.findOne({
             where: { email: req.body.email }
@@ -55,6 +66,15 @@ const controller = {
     },
 
     processLogin: (req, res) => {
+        const resultValidation = validationResult(req);
+
+        if (resultValidation.errors.length > 0) {
+            return res.render('users/login', {
+                errors: resultValidation.mapped(),
+                oldData: req.body
+            });
+        }
+
         db.User.findOne({
             where: { email: req.body.email },
             include: ['category'] // Include category info if needed ("admin" check in views uses user.category usually as string?)

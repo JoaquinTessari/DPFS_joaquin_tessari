@@ -13,14 +13,26 @@
             <h2>Iniciar Sesión</h2>
 
             <form action="/users/login" method="POST">
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Contraseña" required>
+                <input type="email" name="email" placeholder="Email" value="<%= locals.oldData ? oldData.email : '' %>"
+                    required>
+                <% if (locals.errors && errors.email) { %>
+                    <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                        <%= errors.email.msg %>
+                    </p>
+                    <% } %>
 
-                <label style="display: block; margin: 10px 0;">
-                    <input type="checkbox" name="remember_user"> Recordarme
-                </label>
+                        <input type="password" name="password" placeholder="Contraseña" required>
+                        <% if (locals.errors && errors.password) { %>
+                            <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                                <%= errors.password.msg %>
+                            </p>
+                            <% } %>
 
-                <button type="submit">INGRESAR</button>
+                                <label class="remember-me">
+                                    <input type="checkbox" name="remember_user"> Recordarme
+                                </label>
+
+                                <button type="submit">INGRESAR</button>
             </form>
 
             <p>¿No tenés cuenta? <a href="/users/register">Registrate</a></p>

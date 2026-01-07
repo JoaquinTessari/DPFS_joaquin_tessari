@@ -15,45 +15,66 @@
 
             <form action="/products/<%= product.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <label for="name">Nombre del producto</label>
-                <input type="text" id="name" name="name" value="<%= product.name %>" required>
+                <input type="text" id="name" name="name" value="<%= locals.oldData ? oldData.name : product.name %>"
+                    required minlength="5">
+                <% if (locals.errors && errors.name) { %>
+                    <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                        <%= errors.name.msg %>
+                    </p>
+                    <% } %>
 
-                <label for="description">Descripción</label>
-                <textarea id="description" name="description"><%= product.description %></textarea>
+                        <label for="description">Descripción</label>
+                        <textarea id="description" name="description"
+                            minlength="20"><%= locals.oldData ? oldData.description : product.description %></textarea>
+                        <% if (locals.errors && errors.description) { %>
+                            <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                                <%= errors.description.msg %>
+                            </p>
+                            <% } %>
 
-                <label for="image">Imagen</label>
-                <input type="file" id="image" name="image">
-                <p>Imagen actual: <img src="<%= product.image %>" width="100" alt=""></p>
-
-                <label for="category">Categoría</label>
-                <select id="category" name="category">
-                    <!-- Assuming category is an object in edit, or name string if simplified. Using name logic from before -->
-                    <option value="computacion" <%=(product.category && product.category.name==='computacion' )
-                        ? 'selected' : '' %>>Computación</option>
-                    <option value="audio" <%=(product.category && product.category.name==='audio' ) ? 'selected' : '' %>
-                        >Audio</option>
-                    <option value="gaming" <%=(product.category && product.category.name==='gaming' ) ? 'selected' : ''
-                        %>>Gaming</option>
-                    <option value="ofertas" <%=(product.category && product.category.name==='ofertas' ) ? 'selected'
-                        : '' %>>Ofertas</option>
-                </select>
-
-                <label for="brand_id">Marca</label>
-                <select id="brand_id" name="brand_id">
-                    <% if (typeof brands !=='undefined' && brands.length> 0) { %>
-                        <% brands.forEach(brand=> { %>
-                            <option value="<%= brand.id %>" <%=(product.brand_id===brand.id) ? 'selected' : '' %>><%=
-                                    brand.name %>
-                            </option>
-                            <% }); %>
-                                <% } else { %>
-                                    <option value="">No hay marcas</option>
+                                <label for="image">Imagen</label>
+                                <input type="file" id="image" name="image">
+                                <% if (locals.errors && errors.image) { %>
+                                    <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                                        <%= errors.image.msg %>
+                                    </p>
                                     <% } %>
-                </select>
+                                        <p>Imagen actual: <img src="<%= product.image %>" width="100" alt=""></p>
 
-                <label for="price">Precio</label>
-                <input type="number" id="price" name="price" value="<%= product.price %>" required>
+                                        <label for="category">Categoría</label>
+                                        <select id="category" name="category">
+                                            <!-- Assuming category is an object in edit, or name string if simplified. Using name logic from before -->
+                                            <option value="computacion" <%=(product.category &&
+                                                product.category.name==='computacion' ) ? 'selected' : '' %>>Computación
+                                            </option>
+                                            <option value="audio" <%=(product.category &&
+                                                product.category.name==='audio' ) ? 'selected' : '' %>
+                                                >Audio</option>
+                                            <option value="gaming" <%=(product.category &&
+                                                product.category.name==='gaming' ) ? 'selected' : '' %>>Gaming</option>
+                                            <option value="ofertas" <%=(product.category &&
+                                                product.category.name==='ofertas' ) ? 'selected' : '' %>>Ofertas
+                                            </option>
+                                        </select>
 
-                <button type="submit">ACTUALIZAR PRODUCTO</button>
+                                        <label for="brand_id">Marca</label>
+                                        <select id="brand_id" name="brand_id">
+                                            <% if (typeof brands !=='undefined' && brands.length> 0) { %>
+                                                <% brands.forEach(brand=> { %>
+                                                    <option value="<%= brand.id %>" <%=(product.brand_id===brand.id)
+                                                        ? 'selected' : '' %>><%= brand.name %>
+                                                    </option>
+                                                    <% }); %>
+                                                        <% } else { %>
+                                                            <option value="">No hay marcas</option>
+                                                            <% } %>
+                                        </select>
+
+                                        <label for="price">Precio</label>
+                                        <input type="number" id="price" name="price" value="<%= product.price %>"
+                                            required>
+
+                                        <button type="submit">ACTUALIZAR PRODUCTO</button>
             </form>
 
             <form action="/products/<%= product.id %>?_method=DELETE" method="POST" style="margin-top: 15px;">

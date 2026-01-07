@@ -1,5 +1,6 @@
 const db = require('../database/models');
 const { Op } = require('sequelize');
+const { validationResult } = require('express-validator');
 
 const controller = {
     // Raíz - Mostrar todos los productos
@@ -89,6 +90,23 @@ const controller = {
 
     // Crear - Método para guardar
     store: (req, res) => {
+        const resultValidation = validationResult(req);
+
+        if (resultValidation.errors.length > 0) {
+            return Promise.all([
+                db.Category.findAll(),
+                db.Brand.findAll()
+            ])
+                .then(([categories, brands]) => {
+                    res.render('products/create', {
+                        errors: resultValidation.mapped(),
+                        oldData: req.body,
+                        categories,
+                        brands
+                    });
+                });
+        }
+
         const categoryName = req.body.category;
         const newBrandName = req.body.new_brand;
 
@@ -235,7 +253,7 @@ const controller = {
                 res.redirect('/products');
             })
             .catch(error => res.send(error));
-    }
+    },
 };
 
 module.exports = controller;

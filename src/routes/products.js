@@ -27,9 +27,13 @@ router.get('/category/:category', productsController.listByCategory);
 /*** BUSCAR PRODUCTOS ***/
 router.get('/search', productsController.search);
 
+const validateProduct = require('../middlewares/validateProduct');
+
+// ... (existing code)
+
 /*** CREAR UN PRODUCTO ***/
 router.get('/create', adminMiddleware, productsController.create);
-router.post('/', adminMiddleware, upload.single('image'), productsController.store);
+router.post('/', adminMiddleware, upload.single('image'), validateProduct, productsController.store);
 
 
 /*** OBTENER UN PRODUCTO ***/
@@ -37,7 +41,7 @@ router.get('/:id', productsController.detail);
 
 /*** EDITAR UN PRODUCTO ***/
 router.get('/:id/edit', adminMiddleware, productsController.edit);
-router.put('/:id', adminMiddleware, upload.single('image'), productsController.update);
+router.put('/:id', adminMiddleware, upload.single('image'), validateProduct, productsController.update);
 
 
 /*** ELIMINAR UN PRODUCTO ***/

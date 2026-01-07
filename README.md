@@ -67,5 +67,10 @@ credenciales de admin:
 email: superadmin@admin.com
 password: admin123    
 
+Para crear un producto nuevo
+
+1. ir a la ruta /products/new
+2. completar el formulario
+3. enviar el formulario 
 
 </div>

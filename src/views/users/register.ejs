@@ -13,21 +13,59 @@
             <h2>Crear Cuenta</h2>
 
             <form action="/users/register" method="POST" enctype="multipart/form-data">
-                <input type="text" name="firstName" placeholder="Nombre" required>
-                <input type="text" name="lastName" placeholder="Apellido" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Contraseña" required>
-                <input type="password" name="confirmPassword" placeholder="Repetir Contraseña" required>
+                <input type="text" name="firstName" placeholder="Nombre"
+                    value="<%= locals.oldData ? oldData.firstName : '' %>" required minlength="2">
+                <% if (locals.errors && errors.firstName) { %>
+                    <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                        <%= errors.firstName.msg %>
+                    </p>
+                    <% } %>
 
-                <label for="image" style="display: block; margin-top: 10px; margin-bottom: 5px;">Imagen de
-                    perfil:</label>
-                <input type="file" name="image" id="image" accept="image/*" style="margin-bottom: 15px;">
+                        <input type="text" name="lastName" placeholder="Apellido"
+                            value="<%= locals.oldData ? oldData.lastName : '' %>" required minlength="2">
+                        <% if (locals.errors && errors.lastName) { %>
+                            <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                                <%= errors.lastName.msg %>
+                            </p>
+                            <% } %>
 
-                <label>
-                    <input type="checkbox" required> Acepto los Términos y Condiciones
-                </label>
+                                <input type="email" name="email" placeholder="Email"
+                                    value="<%= locals.oldData ? oldData.email : '' %>" required>
+                                <% if (locals.errors && errors.email) { %>
+                                    <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                                        <%= errors.email.msg %>
+                                    </p>
+                                    <% } %>
 
-                <button type="submit">REGISTRARME</button>
+                                        <input type="password" name="password" placeholder="Contraseña" required
+                                            minlength="8">
+                                        <% if (locals.errors && errors.password) { %>
+                                            <p class="error-msg" style="color: red; font-size: 0.9rem;">
+                                                <%= errors.password.msg %>
+                                            </p>
+                                            <% } %>
+
+                                                <input type="password" name="confirmPassword"
+                                                    placeholder="Repetir Contraseña" required minlength="8">
+
+                                                <label for="image"
+                                                    style="display: block; margin-top: 10px; margin-bottom: 5px;">Imagen
+                                                    de perfil:</label>
+                                                <input type="file" name="image" id="image" accept="image/*"
+                                                    style="margin-bottom: 5px;">
+                                                <% if (locals.errors && errors.image) { %>
+                                                    <p class="error-msg"
+                                                        style="color: red; font-size: 0.9rem; margin-bottom: 10px;">
+                                                        <%= errors.image.msg %>
+                                                    </p>
+                                                    <% } %>
+
+                                                        <label>
+                                                            <input type="checkbox" required> Acepto los Términos y
+                                                            Condiciones
+                                                        </label>
+
+                                                        <button type="submit">REGISTRARME</button>
             </form>
 
             <p>¿Ya tenés cuenta? <a href="/users/login">Iniciar Sesión</a></p>

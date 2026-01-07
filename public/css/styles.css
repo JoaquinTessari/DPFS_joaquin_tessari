@@ -703,7 +703,7 @@ button.cart:hover {
     box-shadow: var(--shadow-lg);
 }
 
-.form-container input,
+.form-container input:not([type="checkbox"]),
 .form-container select,
 .form-container textarea {
     background: var(--input-bg);
@@ -713,6 +713,22 @@ button.cart:hover {
     border-radius: 8px;
     width: 100%;
     margin-bottom: 1rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.remember-me input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
 }
 
 .form-container input:focus {

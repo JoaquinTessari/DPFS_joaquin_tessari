@@ -21,13 +21,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// Validaciones
+const validateRegister = require('../middlewares/validateRegister');
+const validateLogin = require('../middlewares/validateLogin');
+
 // Registro
 router.get('/register', guestMiddleware, usersController.register);
-router.post('/register', upload.single('image'), usersController.processRegister);
+router.post('/register', upload.single('image'), validateRegister, usersController.processRegister);
 
 // Login
 router.get('/login', guestMiddleware, usersController.login);
-router.post('/login', usersController.processLogin);
+router.post('/login', validateLogin, usersController.processLogin);
 
 // Perfil
 router.get('/profile', authMiddleware, usersController.profile);
