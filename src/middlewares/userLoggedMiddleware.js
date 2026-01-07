@@ -1,28 +1,29 @@
-const fs = require('fs');
-const path = require('path');
+const db = require('../database/models');
 
-const usersFilePath = path.join(__dirname, '../../data/users.json');
-
-const getUsers = () => {
-    try {
-        const fileContent = fs.readFileSync(usersFilePath, 'utf-8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        return [];
-    }
-};
-
-function userLoggedMiddleware(req, res, next) {
+async function userLoggedMiddleware(req, res, next) {
     res.locals.isLogged = false;
 
     // Verificar cookie SOLO si la sesión no existe
     if (!req.session.user && req.cookies.userEmail) {
-        const users = getUsers();
-        const userFromCookie = users.find(u => u.email === req.cookies.userEmail);
+        try {
+            const userFromCookie = await db.User.findOne({
+                where: { email: req.cookies.userEmail },
+                include: ['category']
+            });
 
-        if (userFromCookie) {
-            delete userFromCookie.password;
-            req.session.user = userFromCookie;
+            if (userFromCookie) {
+                let userSession = userFromCookie.get({ plain: true });
+                delete userSession.password;
+
+                // Fix category for compatibility
+                if (userSession.category && userSession.category.name) {
+                    userSession.category = userSession.category.name;
+                }
+
+                req.session.user = userSession;
+            }
+        } catch (error) {
+            console.error('Error in userLoggedMiddleware:', error);
         }
     }
 

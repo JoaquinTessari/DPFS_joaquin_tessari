@@ -30,6 +30,19 @@
                     <option value="ofertas">Ofertas</option>
                 </select>
 
+                <label for="brand_id">Marca</label>
+                <select id="brand_id" name="brand_id">
+                    <% if (typeof brands !=='undefined' && brands.length> 0) { %>
+                        <% brands.forEach(brand=> { %>
+                            <option value="<%= brand.id %>">
+                                <%= brand.name %>
+                            </option>
+                            <% }); %>
+                                <% } else { %>
+                                    <option value="">No hay marcas</option>
+                                    <% } %>
+                </select>
+
                 <label for="colors">Colores</label>
                 <input type="text" id="colors" name="colors" placeholder="Ej: Negro, Blanco">
 

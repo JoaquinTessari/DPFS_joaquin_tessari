@@ -9,49 +9,108 @@
 
     <%- include('partials/header') %>
 
-        <div class="banner">BANNER PROMOCIONAL</div>
+        <% if (typeof isHome !=='undefined' && isHome) { %>
+            <!-- Carousel Styles -->
+            <style>
+                .banner-carousel {
+                    position: relative;
+                    width: 100%;
+                    overflow: hidden;
+                }
 
-        <div class="benefits">
-            <div class="benefit">
-                <i class="fas fa-credit-card" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
-                <br>Pagá con tarjeta
-            </div>
-            <div class="benefit">
-                <i class="fas fa-truck" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i>
-                <br>Envío gratis
-            </div>
-            <div class="benefit">
-                <i class="fas fa-shield-alt" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
-                <br>Seguridad
-            </div>
-        </div>
+                .carousel-wrapper {
+                    display: flex;
+                    transition: transform 0.5s ease-in-out;
+                }
 
-        <section class="section">
-            <h2>
-                <%= (typeof query !=='undefined' && query) ? 'Resultados para: ' + query : 'Productos' %>
-            </h2>
+                .carousel-slide {
+                    min-width: 100%;
+                    box-sizing: border-box;
+                }
 
-            <div class="products <%= (typeof isHome !== 'undefined' && isHome) ? 'featured-slider' : '' %>">
-                <% if (typeof products !=='undefined' && products.length> 0) { %>
-                    <% products.forEach(product=> { %>
-                        <div class="product">
-                            <a href="/products/<%= product.id %>">
-                                <img src="<%= product.image %>" alt="<%= product.name %>">
-                                <h4>
-                                    <%= product.name %>
-                                </h4>
-                            </a>
-                            <p class="price">$<%= product.price %>
-                            </p>
-                        </div>
-                        <% }) %>
-                            <% } else { %>
-                                <p>No hay productos disponibles.</p>
-                                <% } %>
+                .carousel-slide img {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                }
+            </style>
+
+            <!-- Carousel HTML -->
+            <div class="banner-carousel">
+                <div class="carousel-wrapper" id="carouselWrapper">
+                    <div class="carousel-slide">
+                        <a href="/products/category/computacion">
+                            <img src="/images/baner1.png" alt="Banner Computación">
+                        </a>
+                    </div>
+                    <div class="carousel-slide">
+                        <a href="/products/category/audio">
+                            <img src="/images/baner2.png" alt="Banner Audio">
+                        </a>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <%- include('partials/footer') %>
+            <!-- Carousel Script -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const wrapper = document.getElementById('carouselWrapper');
+                    const slides = document.querySelectorAll('.carousel-slide');
+                    let currentIndex = 0;
+                    const totalSlides = slides.length;
+
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % totalSlides;
+                        const offset = -currentIndex * 100;
+                        wrapper.style.transform = `translateX(${offset}%)`;
+                    }, 5000); // Change every 5 seconds
+                });
+            </script>
+
+            <div class="benefits">
+                <div class="benefit">
+                    <i class="fas fa-credit-card"
+                        style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
+                    <br>Pagá con tarjeta
+                </div>
+                <div class="benefit">
+                    <i class="fas fa-truck" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i>
+                    <br>Envío gratis
+                </div>
+                <div class="benefit">
+                    <i class="fas fa-shield-alt"
+                        style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
+                    <br>Seguridad
+                </div>
+            </div>
+            <% } %>
+
+                <section class="section">
+                    <h2>
+                        <%= (typeof query !=='undefined' && query) ? 'Resultados para: ' + query : 'Productos' %>
+                    </h2>
+
+                    <div class="products <%= (typeof isHome !== 'undefined' && isHome) ? 'featured-slider' : '' %>">
+                        <% if (typeof products !=='undefined' && products.length> 0) { %>
+                            <% products.forEach(product=> { %>
+                                <div class="product">
+                                    <a href="/products/<%= product.id %>">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>">
+                                        <h4>
+                                            <%= product.name %>
+                                        </h4>
+                                    </a>
+                                    <p class="price">$<%= product.price %>
+                                    </p>
+                                </div>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>No hay productos disponibles.</p>
+                                        <% } %>
+                    </div>
+                </section>
+
+                <%- include('partials/footer') %>
 
 </body>
 

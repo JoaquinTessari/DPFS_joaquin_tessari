@@ -3,7 +3,6 @@ const path = require('path');
 const app = express();
 const session = require('express-session');
 const methodOverride = require('method-override');
-const fs = require('fs');
 const cookieParser = require('cookie-parser');
 
 // Rutas
@@ -28,12 +27,7 @@ app.use(userLoggedMiddleware);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Ayudantes para leer datos JSON
-const getProducts = () => {
-    try {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, 'data/products.json'), 'utf-8'));
-    } catch (e) { return []; }
-};
+const db = require('./src/database/models');
 
 // Middlewares Globales
 app.use((req, res, next) => {
@@ -48,8 +42,13 @@ app.use((req, res, next) => {
 
 // Rutas Principales
 app.get('/', (req, res) => {
-    const products = getProducts();
-    res.render('index', { products, isHome: true });
+    db.Product.findAll({
+        include: ['brand', 'category']
+    })
+        .then(products => {
+            res.render('index', { products, isHome: true });
+        })
+        .catch(error => res.send(error));
 });
 
 // Rutas de Usuario
@@ -57,6 +56,10 @@ app.use('/users', usersRouter);
 
 // Rutas de Productos
 app.use('/products', productsRouter);
+
+// Rutas de Ordenes
+const ordersRouter = require('./src/routes/orders');
+app.use('/orders', ordersRouter);
 
 // Rutas del Carrito
 app.get('/cart', (req, res) => {
@@ -67,22 +70,28 @@ app.get('/cart', (req, res) => {
 
 app.post('/cart/add/:id', (req, res) => {
     const productId = req.params.id;
-    const products = getProducts();
-    const product = products.find(p => p.id == productId);
+    db.Product.findByPk(productId, {
+        include: ['brand', 'category']
+    })
+        .then(product => {
+            if (product) {
+                if (!req.session.cart) {
+                    req.session.cart = [];
+                }
 
-    if (product) {
-        if (!req.session.cart) {
-            req.session.cart = [];
-        }
+                // Product is Sequelize instance, convert to plain
+                let productData = product.get({ plain: true });
 
-        const existingItem = req.session.cart.find(item => item.id == productId);
-        if (existingItem) {
-            existingItem.quantity += parseInt(req.body.quantity) || 1;
-        } else {
-            req.session.cart.push({ ...product, quantity: parseInt(req.body.quantity) || 1 });
-        }
-    }
-    res.redirect('/cart');
+                const existingItem = req.session.cart.find(item => item.id == productId);
+                if (existingItem) {
+                    existingItem.quantity += parseInt(req.body.quantity) || 1;
+                } else {
+                    req.session.cart.push({ ...productData, quantity: parseInt(req.body.quantity) || 1 });
+                }
+            }
+            res.redirect('/cart');
+        })
+        .catch(error => res.send(error));
 });
 
 app.post('/cart/remove/:id', (req, res) => {

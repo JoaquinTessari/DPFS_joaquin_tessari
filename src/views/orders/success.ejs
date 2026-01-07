@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+
+        <div class="container" style="max-width: 800px; margin: 4rem auto; padding: 2rem; text-align: center;">
+            <h1 style="color: #10b981; margin-bottom: 2rem;">¡Compra Realizada con Éxito!</h1>
+
+            <div class="summary" style="text-align: left; margin: 0 auto; display: inline-block; width: 100%;">
+                <h3>Detalle de la Orden #<%= order.id %>
+                </h3>
+
+                <div style="margin: 2rem 0;">
+                    <p><strong>Comprador:</strong>
+                        <%= user.firstName %>
+                            <%= user.lastName %>
+                    </p>
+                    <p><strong>Total Pagado:</strong> $<%= order.total %>
+                    </p>
+                </div>
+
+                <h4>Items:</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <% items.forEach(item=> { %>
+                        <li
+                            style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                            <span>
+                                <%= item.quantity %>x <%= item.name %>
+                            </span>
+                            <span>$<%= item.price * item.quantity %></span>
+                        </li>
+                        <% }) %>
+                </ul>
+
+                <div style="margin-top: 3rem; text-align: center;">
+                    <a href="/products"
+                        style="background-color: #3b82f6; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none;">Seguir
+                        Comprando</a>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+</body>
+
+</html>

@@ -13,23 +13,11 @@
 
             <div class="product-main">
                 <img src="<%= product.image %>" alt="<%= product.name %>">
-                <div class="thumbs">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
 
                 <h3>Descripción del Producto</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-
-                <h3>Características Técnicas</h3>
-                <ul>
-                    <li>Procesador: Intel Core i7</li>
-                    <li>Memoria RAM: 16 GB DDR4</li>
-                    <li>Almacenamiento: 512 GB SSD NVMe</li>
-                    <li>Placa de Video: NVIDIA RTX 3050</li>
-                </ul>
+                <p>
+                    <%= product.description %>
+                </p>
             </div>
 
             <div class="buy-box">

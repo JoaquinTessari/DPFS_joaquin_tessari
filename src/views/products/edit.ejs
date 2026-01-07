@@ -26,11 +26,28 @@
 
                 <label for="category">Categoría</label>
                 <select id="category" name="category">
-                    <option value="computacion" <%=product.category==='computacion' ? 'selected' : '' %>>Computación
-                    </option>
-                    <option value="audio" <%=product.category==='audio' ? 'selected' : '' %>>Audio</option>
-                    <option value="gaming" <%=product.category==='gaming' ? 'selected' : '' %>>Gaming</option>
-                    <option value="ofertas" <%=product.category==='ofertas' ? 'selected' : '' %>>Ofertas</option>
+                    <!-- Assuming category is an object in edit, or name string if simplified. Using name logic from before -->
+                    <option value="computacion" <%=(product.category && product.category.name==='computacion' )
+                        ? 'selected' : '' %>>Computación</option>
+                    <option value="audio" <%=(product.category && product.category.name==='audio' ) ? 'selected' : '' %>
+                        >Audio</option>
+                    <option value="gaming" <%=(product.category && product.category.name==='gaming' ) ? 'selected' : ''
+                        %>>Gaming</option>
+                    <option value="ofertas" <%=(product.category && product.category.name==='ofertas' ) ? 'selected'
+                        : '' %>>Ofertas</option>
+                </select>
+
+                <label for="brand_id">Marca</label>
+                <select id="brand_id" name="brand_id">
+                    <% if (typeof brands !=='undefined' && brands.length> 0) { %>
+                        <% brands.forEach(brand=> { %>
+                            <option value="<%= brand.id %>" <%=(product.brand_id===brand.id) ? 'selected' : '' %>><%=
+                                    brand.name %>
+                            </option>
+                            <% }); %>
+                                <% } else { %>
+                                    <option value="">No hay marcas</option>
+                                    <% } %>
                 </select>
 
                 <label for="price">Precio</label>

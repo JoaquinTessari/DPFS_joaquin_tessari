@@ -28,11 +28,16 @@
                                     </p>
                                     <p>Cantidad: <%= product.quantity %>
                                     </p>
-                                    <form action="/cart/remove/<%= product.id %>" method="POST">
+                                    <form action="/cart/remove/<%= product.id %>" method="POST"
+                                        style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                                         <input type="number" name="quantity" min="1" max="<%= product.quantity %>"
-                                            value="1" style="width:60px; margin-right:5px;" />
+                                            value="1"
+                                            style="width: 50px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;" />
                                         <button type="submit"
-                                            style="background:red; padding:5px; margin-top:5px;">Eliminar</button>
+                                            style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.2rem; padding: 5px;"
+                                            title="Eliminar del carrito">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -48,8 +53,24 @@
                 <hr>
                 <h3>Total: $<%= total %>
                 </h3>
-                <a href="/"><button class="buy">CONTINUAR COMPRA</button></a>
-                <p>🔒 Pago seguro</p>
+                <a href="/"><button class="buy"
+                        style="background-color: transparent; border: 2px solid #ccc; color: #333;">SEGUIR
+                        COMPRANDO</button></a>
+
+                <% if (cart.length> 0) { %>
+                    <% if (typeof user !=='undefined' && user) { %>
+                        <form action="/orders/checkout" method="POST" style="margin-top: 10px;">
+                            <button type="submit" class="buy" style="background-color: #10b981;">FINALIZAR
+                                COMPRA</button>
+                        </form>
+                        <% } else { %>
+                            <a href="/users/login"
+                                style="display:block; text-align:center; margin-top:10px; background-color: #3b82f6; color: white; padding: 1rem; border-radius: 8px; text-decoration: none; font-weight: bold;">INICIAR
+                                SESIÓN PARA COMPRAR</a>
+                            <% } %>
+                                <% } %>
+
+                                    <p style="margin-top: 1rem;">🔒 Pago seguro (Simulado)</p>
             </div>
 
         </section>

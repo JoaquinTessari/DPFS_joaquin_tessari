@@ -1,130 +1,240 @@
-const fs = require('fs');
-const path = require('path');
-
-const productsFilePath = path.join(__dirname, '../../data/products.json');
-
-const getProducts = () => {
-    try {
-        const fileContent = fs.readFileSync(productsFilePath, 'utf-8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        return [];
-    }
-};
-
-const saveProducts = (products) => {
-    fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
-};
+const db = require('../database/models');
+const { Op } = require('sequelize');
 
 const controller = {
     // Raíz - Mostrar todos los productos
     index: (req, res) => {
-        const products = getProducts();
-        res.render('index', { products, isHome: false });
+        db.Product.findAll({
+            include: ['brand', 'category']
+        })
+            .then(products => {
+                res.render('index', { products, isHome: false });
+            })
+            .catch(error => res.send(error));
     },
 
     // Por Categoría
     listByCategory: (req, res) => {
-        const products = getProducts();
-        const category = req.params.category;
-        const filteredProducts = products.filter(p => p.category === category);
-        res.render('index', { products: filteredProducts, isHome: false });
+        db.Product.findAll({
+            include: [
+                { association: 'brand' },
+                {
+                    association: 'category',
+                    where: { name: req.params.category }
+                }
+            ]
+        })
+            .then(products => {
+                // Si no encuentra nada por nombre exacto, intentar buscar por ID si fuera el caso, pero asumimos nombre
+                res.render('index', { products, isHome: false });
+            })
+            .catch(error => res.send(error));
     },
 
     // Buscar
     search: (req, res) => {
         const query = req.query.q || '';
-        const products = getProducts();
-        const results = products.filter(p =>
-            p.name.toLowerCase().includes(query.toLowerCase()) ||
-            (p.description && p.description.toLowerCase().includes(query.toLowerCase()))
-        );
-
-        if (results.length > 0) {
-            res.render('index', { products: results, isHome: false, query });
-        } else {
-            // Obtener 4 productos aleatorios como recomendaciones
-            const recommendations = [...products]
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 4);
-            res.render('products/no-results', { query, recommendations });
-        }
+        db.Product.findAll({
+            where: {
+                [Op.or]: [
+                    { name: { [Op.like]: `%${query}%` } },
+                    { description: { [Op.like]: `%${query}%` } }
+                ]
+            },
+            include: ['brand', 'category']
+        })
+            .then(products => {
+                if (products.length > 0) {
+                    res.render('index', { products, isHome: false, query });
+                } else {
+                    // Obtener 4 productos aleatorios como recomendaciones
+                    db.Product.findAll({
+                        order: db.sequelize.random(),
+                        limit: 4,
+                        include: ['brand', 'category']
+                    })
+                        .then(recommendations => {
+                            res.render('products/no-results', { query, recommendations });
+                        });
+                }
+            })
+            .catch(error => res.send(error));
     },
 
     // Detalle - Detalle de un producto
     detail: (req, res) => {
-        const products = getProducts();
-        const product = products.find(p => p.id == req.params.id);
-        if (!product) return res.send('Producto no encontrado');
-        res.render('products/detail', { product });
+        db.Product.findByPk(req.params.id, {
+            include: ['brand', 'category', 'colors']
+        })
+            .then(product => {
+                if (!product) return res.send('Producto no encontrado');
+                res.render('products/detail', { product });
+            })
+            .catch(error => res.send(error));
     },
 
     // Crear - Formulario para crear
     create: (req, res) => {
-        res.render('products/create');
+        // Necesitamos categorías para el select (si lo actualizamos). 
+        // Por ahora enviamos a la vista, si la vista no lo usa no pasa nada.
+        Promise.all([
+            db.Category.findAll(),
+            db.Brand.findAll()
+        ])
+            .then(([categories, brands]) => {
+                res.render('products/create', { categories, brands });
+            })
+            .catch(error => res.send(error));
     },
 
     // Crear - Método para guardar
     store: (req, res) => {
-        const products = getProducts();
-        const newProduct = {
-            id: products.length > 0 ? products[products.length - 1].id + 1 : 1,
-            name: req.body.name,
-            price: parseFloat(req.body.price),
-            description: req.body.description,
-            category: req.body.category,
-            colors: req.body.colors ? req.body.colors.split(',').map(c => c.trim()) : [],
-            image: req.file ? `/images/${req.file.filename}` : '/images/default.jpg'
-        };
-        products.push(newProduct);
-        saveProducts(products);
-        res.redirect('/products');
+        const categoryName = req.body.category;
+        const newBrandName = req.body.new_brand;
+
+        const categoryPromise = db.Category.findOne({
+            where: { name: { [Op.like]: categoryName } }
+        });
+
+        const brandPromise = newBrandName ?
+            db.Brand.findOrCreate({ where: { name: newBrandName }, defaults: { name: newBrandName } }) :
+            Promise.resolve(null);
+
+        Promise.all([categoryPromise, brandPromise])
+            .then(([category, brandResult]) => {
+                let categoryId = category ? category.id : null;
+
+                let brandId = req.body.brand_id;
+                if (brandResult) {
+                    // brandResult is [instance, created]
+                    brandId = brandResult[0].id;
+                }
+
+                return db.Product.create({
+                    name: req.body.name,
+                    price: parseFloat(req.body.price),
+                    description: req.body.description,
+                    category_id: categoryId,
+                    brand_id: brandId,
+                    image: req.file ? `/images/${req.file.filename}` : '/images/default.jpg'
+                });
+            })
+            .then(product => {
+                // Colores
+                const colorsInput = req.body.colors; // "Negro, Blanco"
+                if (colorsInput) {
+                    const colorsArray = colorsInput.split(',').map(c => c.trim());
+                    // Iterar y buscar/crear
+                    const colorPromises = colorsArray.map(colorName => {
+                        return db.Color.findOrCreate({
+                            where: { name: colorName },
+                            defaults: { name: colorName }
+                        });
+                    });
+
+                    return Promise.all(colorPromises)
+                        .then(results => {
+                            // results es [[color, created], [color, created]]
+                            const colorInstances = results.map(r => r[0]);
+                            return product.setColors(colorInstances);
+                        });
+                }
+            })
+            .then(() => {
+                res.redirect('/products');
+            })
+            .catch(error => res.send(error));
     },
 
     // Editar - Formulario para editar
     edit: (req, res) => {
-        const products = getProducts();
-        const product = products.find(p => p.id == req.params.id);
-        if (!product) return res.send('Producto no encontrado');
-        res.render('products/edit', { product });
+        const productPromise = db.Product.findByPk(req.params.id, {
+            include: ['colors', 'category', 'brand']
+        });
+        const categoriesPromise = db.Category.findAll();
+        const brandsPromise = db.Brand.findAll();
+
+        Promise.all([productPromise, categoriesPromise, brandsPromise])
+            .then(([product, categories, brands]) => {
+                if (!product) return res.send('Producto no encontrado');
+                res.render('products/edit', { product, categories, brands });
+            })
+            .catch(error => res.send(error));
     },
 
     // Actualizar - Método para actualizar
     update: (req, res) => {
-        const products = getProducts();
-        const index = products.findIndex(p => p.id == req.params.id);
-        if (index !== -1) {
-            products[index] = {
-                ...products[index],
-                name: req.body.name,
-                price: parseFloat(req.body.price),
-                description: req.body.description,
-                category: req.body.category,
-                // Solo actualizar la imagen si se sube una nueva
-                image: req.file ? `/images/${req.file.filename}` : products[index].image,
-                // Asumiendo que los colores también son editables pero el formulario podría necesitar ajustes o simplemente procesamos el texto de nuevo
-                colors: req.body.colors ? req.body.colors.split(',').map(c => c.trim()) : products[index].colors
-            };
-            saveProducts(products);
-            res.redirect(`/products/${req.params.id}`);
-        } else {
-            res.send('Producto no encontrado');
-        }
+        const categoryName = req.body.category;
+        const newBrandName = req.body.new_brand;
+
+        const categoryPromise = db.Category.findOne({
+            where: { name: { [Op.like]: categoryName } }
+        });
+
+        const brandPromise = newBrandName ?
+            db.Brand.findOrCreate({ where: { name: newBrandName }, defaults: { name: newBrandName } }) :
+            Promise.resolve(null);
+
+        Promise.all([categoryPromise, brandPromise])
+            .then(([category, brandResult]) => {
+                let categoryId = category ? category.id : null;
+
+                let brandId = req.body.brand_id;
+                if (brandResult) {
+                    brandId = brandResult[0].id;
+                }
+
+                let updateData = {
+                    name: req.body.name,
+                    price: parseFloat(req.body.price),
+                    description: req.body.description,
+                    category_id: categoryId,
+                    brand_id: brandId,
+                };
+                if (req.file) {
+                    updateData.image = `/images/${req.file.filename}`;
+                }
+
+                return db.Product.update(updateData, {
+                    where: { id: req.params.id }
+                });
+            })
+            .then(() => {
+                // Actualizar colores
+                return db.Product.findByPk(req.params.id);
+            })
+            .then(product => {
+                const colorsInput = req.body.colors;
+                if (colorsInput) {
+                    const colorsArray = colorsInput.split(',').map(c => c.trim());
+                    const colorPromises = colorsArray.map(colorName => {
+                        return db.Color.findOrCreate({
+                            where: { name: colorName },
+                            defaults: { name: colorName }
+                        });
+                    });
+                    return Promise.all(colorPromises)
+                        .then(results => {
+                            const colorInstances = results.map(r => r[0]);
+                            return product.setColors(colorInstances);
+                        });
+                }
+            })
+            .then(() => {
+                res.redirect(`/products/${req.params.id}`);
+            })
+            .catch(error => res.send(error));
     },
 
     // Borrar - Borrar un producto de la BD
     destroy: (req, res) => {
-        let products = getProducts();
-        const productId = req.params.id;
-        const index = products.findIndex(p => p.id == productId);
-
-        if (index !== -1) {
-            products.splice(index, 1);
-            saveProducts(products);
-            res.redirect('/products');
-        } else {
-            res.status(404).send('Producto no encontrado');
-        }
+        db.Product.destroy({
+            where: { id: req.params.id }
+        })
+            .then(() => {
+                res.redirect('/products');
+            })
+            .catch(error => res.send(error));
     }
 };
 
