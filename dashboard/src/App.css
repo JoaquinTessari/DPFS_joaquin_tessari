@@ -1,0 +1,153 @@
+/* Google Font Import - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif !important;
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Card Styling */
+.card {
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Small Cards Colors */
+.border-left-primary {
+  border-left: 5px solid #4e73df !important;
+}
+
+.border-left-success {
+  border-left: 5px solid #1cc88a !important;
+}
+
+.border-left-warning {
+  border-left: 5px solid #f6c23e !important;
+}
+
+.text-primary {
+  color: #4e73df !important;
+}
+
+.text-success {
+  color: #1cc88a !important;
+}
+
+.text-warning {
+  color: #f6c23e !important;
+}
+
+/* Headers */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+h1.h3 {
+  margin-bottom: 1.5rem !important;
+  font-weight: 700;
+  color: #111827 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  padding: 1.25rem !important;
+}
+
+.card-header h6,
+.card-header h5 {
+  font-weight: 700 !important;
+  color: #374151 !important;
+}
+
+/* Images */
+.img-fluid {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons/Links */
+a {
+  color: #4e73df;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #224abe;
+  text-decoration: underline;
+}
+
+/* Stats Cards (Categories) */
+.bg-info {
+  background: linear-gradient(135deg, #36b9cc 0%, #258391 100%) !important;
+}
+
+.bg-info .card-body {
+  font-weight: 500;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Table styling */
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  border-bottom: 2px solid #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  background-color: #f9fafb;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  vertical-align: middle;
+  color: #6b7280;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container-fluid {
+  animation: fadeIn 0.6s ease-out;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}

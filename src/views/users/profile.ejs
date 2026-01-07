@@ -9,32 +9,41 @@
 
     <%- include('../partials/header') %>
 
-        <div class="container" style="padding: 40px; text-align: center;">
-            <div class="profile-card"
-                style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-                <h2>Mi Perfil</h2>
-                <img src="<%= user.image %>" alt="Perfil"
-                    style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 20px;">
-                <h3>
+        <div class="profile-container">
+            <div class="profile-card">
+                <h2 class="profile-title">Mi Perfil</h2>
+
+                <div class="profile-avatar-wrapper">
+                    <img src="<%= user.image %>" alt="Perfil" class="profile-avatar"
+                        onerror="this.src='/images/users/default-user.jpg'">
+                </div>
+
+                <h3 class="profile-name">
                     <%= user.firstName %>
                         <%= user.lastName %>
                 </h3>
-                <p><strong>Email:</strong>
-                    <%= user.email %>
-                </p>
-                <p><strong>Categoría:</strong>
-                    <%= user.category %>
-                </p>
 
-                <div style="margin-top: 20px;">
+                <div class="profile-info">
+                    <p><strong>Email:</strong>
+                        <%= user.email %>
+                    </p>
+                    <p><strong>Categoría:</strong>
+                        <%= user.category %>
+                    </p>
+                </div>
+
+                <div class="profile-actions">
                     <% if (user.category==='admin' ) { %>
-                        <a href="/products/create" class="button"
-                            style="background-color: var(--primary); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin-bottom: 15px; display: inline-block;">CARGAR
-                            PRODUCTO (Admin)</a>
-                        <br>
+                        <a href="/products/create" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Cargar Producto
+                        </a>
                         <% } %>
-                            <a href="/products" class="button">Ver Productos</a>
-                            <a href="/users/logout" class="button delete">Cerrar Sesión</a>
+                            <a href="/products" class="btn btn-secondary">
+                                <i class="fas fa-shopping-bag"></i> Ver Productos
+                            </a>
+                            <a href="/users/logout" class="btn btn-danger">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ const app = express();
 const session = require('express-session');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 // Rutas
 const productsRouter = require('./src/routes/products');
@@ -15,6 +16,7 @@ const userLoggedMiddleware = require('./src/middlewares/userLoggedMiddleware');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors());
 app.use(methodOverride('_method'));
 app.use(session({
     secret: 'secret-key',
@@ -53,9 +55,11 @@ app.get('/', (req, res) => {
 
 // Rutas de Usuario
 app.use('/users', usersRouter);
+app.use('/api/users', require('./src/routes/api/users'));
 
 // Rutas de Productos
 app.use('/products', productsRouter);
+app.use('/api/products', require('./src/routes/api/products'));
 
 // Rutas de Ordenes
 const ordersRouter = require('./src/routes/orders');
